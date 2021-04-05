@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TypingDNA Form</title>
+    <script src="https://typingdna.com/scripts/typingdna.js"></script>
+    <script>
+        const tdna = new TypingDNA();
+        tdna.addTarget('sentence');
+
+        function submit() {
+          const user = document.getElementById("user").value;
+          const text = document.getElementById("sentence").value;
+          const pattern = tdna.getTypingPattern({ type: 1, text });
+          console.log(pattern);
+          sendPattern(user, pattern);
+        }
+
+        function sendPattern(user, pattern) {
+          const url = `http://localhost:3000/api/v1/user/${user}/msg`;
+          const body = JSON.stringify({ pattern });
+          fetch(url, { method: 'POST', body }).then(console.log).catch(console.error);
+        }
+    </script>
+</head>
+<body>
+  <input type="text" id="user">
+  <input type="text" id="sentence">
+  <button onclick="submit()">Submit</button>
+</body>
+</html>
