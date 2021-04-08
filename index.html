@@ -17,9 +17,21 @@
         }
 
         function sendPattern(user, pattern) {
-          const url = `http://localhost:3000/api/v1/user/${user}/msg`;
-          const body = JSON.stringify({ pattern });
-          fetch(url, { method: 'POST', body }).then(console.log).catch(console.error);
+          const url = `http://localhost:3000/`;
+          const body = JSON.stringify({ user, pattern });
+          const headers = { 'Content-Type': 'application/json' };
+          const mode = 'cors';
+          fetch(url, { method: 'POST', body, headers, mode })
+            .then(response => response.json())
+            .then(handleAuthResponse)
+            .catch(console.error);
+        }
+
+        function handleAuthResponse(res) {
+          console.log(res);
+          if (res.result) {
+            console.log('Authentication is successful!');
+          }
         }
     </script>
 </head>
