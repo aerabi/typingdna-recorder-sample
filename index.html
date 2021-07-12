@@ -6,15 +6,41 @@
     <script src="https://typingdna.com/scripts/typingdna.js"></script>
     <style>
         input { width: 100% }
+        .bg-green { background-color: greenyellow }
     </style>
     <script>
         const tdna = new TypingDNA();
         tdna.addTarget('sentence');
 
+        function validateSentence(text) {
+          const patternSentence = 'Make yourself necessary to somebody';
+          const submitButton = document.getElementById('submit-button');
+          submitButton.disabled = text !== patternSentence;
+
+          const alreadyTypedSentence = patternSentence.substr(0, text.length);
+          const remainingSentence = patternSentence.substring(text.length, patternSentence.length);
+          document.getElementById('already-typed-sentence').innerText = alreadyTypedSentence;
+          document.getElementById('remaining-sentence').innerText = remainingSentence;
+
+          if (alreadyTypedSentence === text) {
+            document.getElementById('already-typed-sentence').style.backgroundColor = 'greenyellow';
+          } else {
+            document.getElementById('already-typed-sentence').style.backgroundColor = 'red';
+          }
+        }
+
+        let retries = 3;
+
         function submit() {
+          document.getElementById('submit-button').disabled = true;
+
           const user = document.getElementById("user").value;
-          const text = document.getElementById("sentence").value;
+          const textField = document.getElementById("sentence");
+          const text = textField.value;
           const pattern = tdna.getTypingPattern({ type: 1, text });
+
+          textField.value = '';
+
           console.log(pattern);
           sendPattern(user, pattern);
         }
@@ -31,16 +57,46 @@
         }
 
         function handleAuthResponse(res) {
+          const messageField = document.getElementById('message');
+
+          retries--;
+
           console.log(res);
-          if (res.result) {
-            console.log('Authentication is successful!');
+
+          if (retries > 0) {
+            messageField.innerText = res.message + ` Submit ${retries} more patterns to complete registration.`;
+          }
+
+          else if (retries === 0) {
+            messageField.innerText = 'Registration successful!';
+          }
+
+          else if (retries < 0) {
+            if (res.result) {
+              console.log('Authentication is successful!');
+              messageField.innerText = 'Authentication is successful!';
+            } else {
+              messageField.innerText = 'Authentication failed!';
+            }
           }
         }
     </script>
 </head>
 <body>
-  <input type="text" id="user">
-  <input type="text" id="sentence">
-  <button onclick="submit()">Submit</button>
+  <p>
+      Write down your username and the following sentence:<br>
+      You don't know the power of the Darkseid!
+  </p>
+  <label for="user">Username:</label>
+  <input type="text" id="user" placeholder="User123">
+  <label for="sentence">Sentence:</label>
+  <br>
+  <span id="already-typed-sentence" class="bg-green"></span><!--
+--><span id="remaining-sentence">Make yourself necessary to somebody</span>
+  <br>
+  <input type="text" id="sentence" autocomplete="off" onkeyup="validateSentence(this.value)"
+         placeholder="Make yourself necessary to somebody">
+  <button id="submit-button" disabled="disabled" onclick="submit()">Submit</button>
+  <br><p id="message"></p>
 </body>
 </html>
