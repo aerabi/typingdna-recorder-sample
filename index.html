@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>TypingDNA Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script src="https://typingdna.com/scripts/typingdna.js"></script>
     <style>
-        input { width: 100% }
+        input { width: 50% }
         .bg-green { background-color: greenyellow }
     </style>
     <script>
@@ -84,12 +85,11 @@
 </head>
 <body>
   <p>
-      Write down your username and the following sentence:<br>
-      You don't know the power of the Darkseid!
+      Write down your username and passphrase.
   </p>
   <label for="user">Username:</label>
   <input type="text" id="user" placeholder="User123">
-  <label for="sentence">Sentence:</label>
+  <label for="sentence">Passphrase:</label>
   <br>
   <span id="already-typed-sentence" class="bg-green"></span><!--
 --><span id="remaining-sentence">Make yourself necessary to somebody</span>
